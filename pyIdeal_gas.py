@@ -1,67 +1,24 @@
-from dataclasses import dataclass, KW_ONLY
+from dataclasses import KW_ONLY, dataclass
+from typing import Optional
+from units import _pressure, _volume, _mole, _temperature
+
+gas_constant = 0.0821
 
 @dataclass
-class Unit:
+class PVnRT:
     _: KW_ONLY
-    pressure: float
-    volume: float
-    temperature: float
-    unit: str
+    pressure: Optional[_pressure] = None
+    volume: Optional[_volume] = None
+    mole: Optional[_mole] = None
+    temperature: Optional[_temperature] = None
 
     @property
-    def atmosphere(self):
-        if self.unit == "Torr" or self.unit == "mmHg":
-            return self.pressure / 760
+    def calculate_pressure(self):
 
-        elif self.unit == "Pa":
-            return self.pressure / 101326
+        if self.pressure is not None:
+            raise ValueError("pressure already exists")
 
-        else:
-            raise ValueError("All values are already set - Torr, mmHg and Pa")
+        if (self.volume is None or self.mole is None or self.temperature is None):
+            raise ValueError("volume, mole and temperature are required")
 
-    @property
-    def liters(self):
-        if self.unit == "mL" or self.unit == "cm3":
-            return self.volume / 1000
-        else:
-            raise ValueError("All values are already set - mL or cm3\n Info: dm3 = L")
-
-
-
-@dataclass
-class Factor:
-    _: KW_ONLY
-    pressure: Unit | None = None
-    volume: Unit | None = None
-    mol: float | None = None
-    gas_constant: float = 0.0821
-    temperature: Unit | None = None
-
-    @property
-    def PVnRT(self):
-        if self.pressure is None:
-            if self.volume is None or self.mol is None or self.temperature is None:
-                raise ValueError("volume, mol, and temperature must be set to solve for pressure.")
-            self.pressure = (self.mol * self.gas_constant * self.temperature) / self.volume.liters
-            return self.pressure
-
-        elif self.volume is None:
-            if self.pressure is None or self.mol is None or self.temperature is None:
-                raise ValueError("pressure, mol and temperature must be set to solve for volume.")
-            self.volume = (self.mol * self.gas_constant * self.temperature) / self.pressure.atmosphere
-            return self.volume
-
-        elif self.mol is None:
-            if self.pressure is None or self.volume is None or self.temperature is None:
-                raise ValueError("pressure, volume and temperature must be set to solve for mol.")
-            self.mol = (self.pressure.atmosphere * self.volume.liters) / (self.gas_constant * self.temperature)
-            return self.mol
-
-        elif self.temperature is None:
-            if self.pressure is None or self.volume is None or self.mol is None:
-                raise ValueError("pressure, volume and mol must be set to solve for temperature.")
-            self.temperature = (self.pressure * self.volume) / (self.mol * self.gas_constant)
-            return self.temperature
-
-        else:
-            raise ValueError("All values are already set — nothing to solve! !!")
+        return (self.mole._mol * gas_constant * self.temperature._kelvin) / self.volume._liter
