@@ -1,1 +1,1 @@
-# pyIdeal_gas
+# Ideal_gas
