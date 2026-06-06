@@ -1,2 +1,6 @@
+/test/__pycache__
+
+/venv
+/ideal_gas.egg-info
+/pytest_cache
 /__pycache__
-/test.py
