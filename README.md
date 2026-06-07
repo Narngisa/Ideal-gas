@@ -8,6 +8,18 @@ Calculating The Ideal Gas Law in python, focusing make it easy and high school-f
 Pure Python `version >= 3.10`
 
 ## ☕Features
+
+### Unit
+- Pressure `atm`, `Torr` and `mmHg`
+- Volume `ml`, `cm3`, `L` and `dm3`
+- Mole `mol`
+- Temperature `C` and `K`
+
+### Config
+- Gas Constant (R) `0.0821`
+- Kelvin (K) `273`
+
+### Function
 - PV=nRT
 
 ## ⚙️Install
