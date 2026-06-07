@@ -12,7 +12,7 @@ TemperatureUnit = Literal["K", "C"]
 class Unit:
 
     @dataclass
-    class pressure:
+    class Pressure:
         _: KW_ONLY
         pressure: float
         unit: PressureUnit
@@ -26,7 +26,7 @@ class Unit:
             raise ValueError(f"Unsupported pressure unit: {self.unit}")
 
     @dataclass
-    class volume:
+    class Volume:
         _: KW_ONLY
         volume: float
         unit: VolumeUnit
@@ -40,7 +40,7 @@ class Unit:
             raise ValueError(f"Unsupported volume unit: {self.unit}")
 
     @dataclass
-    class mole:
+    class Mole:
         _: KW_ONLY
         mole: float
         unit: MoleUnit
@@ -52,7 +52,7 @@ class Unit:
             raise ValueError(f"Unsupported mole unit: {self.unit}")
 
     @dataclass
-    class temperature:
+    class Temperature:
         _: KW_ONLY
         temperature: float
         unit: TemperatureUnit
@@ -68,10 +68,10 @@ class Unit:
 @dataclass
 class PVnRT:
     _: KW_ONLY
-    pressure: Optional[Unit.pressure] = None
-    volume: Optional[Unit.volume] = None
-    mole: Optional[Unit.mole] = None
-    temperature: Optional[Unit.temperature] = None
+    pressure: Optional[Unit.Pressure] = None
+    volume: Optional[Unit.Volume] = None
+    mole: Optional[Unit.Mole] = None
+    temperature: Optional[Unit.Temperature] = None
 
     @property
     def calculate_pressure(self):
