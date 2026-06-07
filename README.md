@@ -24,7 +24,7 @@ gas = PVnRT(
 )
 
 # Pressure ~ 25.92631
-print(gas.calculate_pressure())
+print(gas.calculate_pressure)
 ```
 
 ## 🔧Test Module
