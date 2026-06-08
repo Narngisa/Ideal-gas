@@ -9,69 +9,66 @@ MoleUnit = Literal["mol"]
 TemperatureUnit = Literal["K", "C"]
 
 @dataclass
-class Unit:
+class Pressure:
+    _: KW_ONLY
+    pressure: float
+    unit: PressureUnit
 
-    @dataclass
-    class Pressure:
-        _: KW_ONLY
-        pressure: float
-        unit: PressureUnit
+    @property
+    def _atmosphere(self) -> float:
+        if self.unit == "atm":
+            return self.pressure
+        elif self.unit == "Torr" or self.unit == "mmHg":
+            return self.pressure / 760
+        raise ValueError(f"Unsupported pressure unit: {self.unit}")
 
-        @property
-        def _atmosphere(self) -> float:
-            if self.unit == "atm":
-                return self.pressure
-            elif self.unit == "Torr" or self.unit == "mmHg":
-                return self.pressure / 760
-            raise ValueError(f"Unsupported pressure unit: {self.unit}")
+@dataclass
+class Volume:
+    _: KW_ONLY
+    volume: float
+    unit: VolumeUnit
 
-    @dataclass
-    class Volume:
-        _: KW_ONLY
-        volume: float
-        unit: VolumeUnit
+    @property
+    def _liter(self) -> float:
+        if self.unit == "L" or self.unit == "dm3":
+            return self.volume
+        elif self.unit == "ml" or self.unit == "cm3":
+            return self.volume / 1000
+        raise ValueError(f"Unsupported volume unit: {self.unit}")
 
-        @property
-        def _liter(self) -> float:
-            if self.unit == "L" or self.unit == "dm3":
-                return self.volume
-            elif self.unit == "ml" or self.unit == "cm3":
-                return self.volume / 1000
-            raise ValueError(f"Unsupported volume unit: {self.unit}")
+@dataclass
+class Mole:
+    _: KW_ONLY
+    mole: float
+    unit: MoleUnit
 
-    @dataclass
-    class Mole:
-        _: KW_ONLY
-        mole: float
-        unit: MoleUnit
+    @property
+    def _mol(self) -> float:
+        if self.unit == "mol":
+            return self.mole
+        raise ValueError(f"Unsupported mole unit: {self.unit}")
 
-        @property
-        def _mol(self) -> float:
-            if self.unit == "mol":
-                return self.mole
-            raise ValueError(f"Unsupported mole unit: {self.unit}")
+@dataclass
+class Temperature:
+    _: KW_ONLY
+    temperature: float
+    unit: TemperatureUnit
 
-    @dataclass
-    class Temperature:
-        _: KW_ONLY
-        temperature: float
-        unit: TemperatureUnit
-
-        @property
-        def _kelvin(self) -> float:
-            if self.unit == "K":
-                return self.temperature
-            elif self.unit == "C":
-                return self.temperature + 273
-            raise ValueError(f"Unsupported temperature unit: {self.unit}")
+    @property
+    def _kelvin(self) -> float:
+        if self.unit == "K":
+            return self.temperature
+        elif self.unit == "C":
+            return self.temperature + 273
+        raise ValueError(f"Unsupported temperature unit: {self.unit}")
 
 @dataclass
 class PVnRT:
     _: KW_ONLY
-    pressure: Optional[Unit.Pressure] = None
-    volume: Optional[Unit.Volume] = None
-    mole: Optional[Unit.Mole] = None
-    temperature: Optional[Unit.Temperature] = None
+    pressure: Optional[Pressure] = None
+    volume: Optional[Volume] = None
+    mole: Optional[Mole] = None
+    temperature: Optional[Temperature] = None
 
     @property
     def calculate_pressure(self):
@@ -88,10 +85,10 @@ class PVnRT:
     def calculate_volume(self):
 
         if self.volume is not None:
-            raise ValueError("pressure already exists")
+            raise ValueError("volume already exists")
 
         if (self.pressure is None or self.mole is None or self.temperature is None):
-            raise ValueError("volume, mole and temperature are required")
+            raise ValueError("pressure, mole and temperature are required")
 
         return (self.mole._mol * gas_constant * self.temperature._kelvin) / self.pressure._atmosphere
 
@@ -99,10 +96,10 @@ class PVnRT:
     def calculate_mole(self):
 
         if self.mole is not None:
-            raise ValueError("pressure already exists")
+            raise ValueError("mole already exists")
 
         if (self.pressure is None or self.volume is None or self.temperature is None):
-            raise ValueError("volume, mole and temperature are required")
+            raise ValueError("pressure, volume and temperature are required")
 
         return (self.pressure._atmosphere * self.volume._liter) / (gas_constant * self.temperature._kelvin)
 
@@ -110,9 +107,9 @@ class PVnRT:
     def calculate_temperature(self):
 
         if self.temperature is not None:
-            raise ValueError("pressure already exists")
+            raise ValueError("temperature already exists")
 
         if (self.pressure is None or self.volume is None or self.mole is None):
-            raise ValueError("volume, mole and temperature are required")
+            raise ValueError("pressure, volume and mole are required")
 
         return (self.pressure._atmosphere * self.volume._liter) / (self.mole._mol * gas_constant)

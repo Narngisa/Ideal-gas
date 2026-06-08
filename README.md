@@ -27,12 +27,13 @@ Pure Python `version >= 3.10`
 
 ## 📃Example
 ```py
-from ideal_gas import PVnRT, Unit
+from ideal_gas import PVnRT, Volume, Mole, Temperature
+# Pressure, Volume, Mole, Temperature
 
 gas = PVnRT(
-    volume=Unit.Volume(volume=7600, unit="ml"),
-    mole=Unit.Mole(mole=8, unit="mol"),
-    temperature=Unit.Temperature(temperature=27, unit="C"),
+    volume=Volume(volume=7600, unit="ml"),
+    mole=Mole(mole=8, unit="mol"),
+    temperature=Temperature(temperature=27, unit="C"),
 )
 
 # Pressure ~ 25.92631

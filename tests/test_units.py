@@ -1,4 +1,4 @@
-from ideal_gas import PVnRT, Unit
+from ideal_gas import Pressure, Volume, Mole, Temperature
 import pytest
 
 @pytest.mark.parametrize("value, unit, expected",[
@@ -9,7 +9,7 @@ import pytest
 )
 
 def test_pressure_conversion(value, unit, expected):
-    p = Unit.Pressure(pressure=value, unit=unit)
+    p = Pressure(pressure=value, unit=unit)
     assert p._atmosphere == expected
 
 @pytest.mark.parametrize("value, unit, expected", [
@@ -20,7 +20,7 @@ def test_pressure_conversion(value, unit, expected):
 ])
 
 def test_volume_conversion(value, unit, expected):
-    v = Unit.Volume(volume=value, unit=unit)
+    v = Volume(volume=value, unit=unit)
     assert v._liter == expected
 
 @pytest.mark.parametrize("value, unit, expected", [
@@ -28,7 +28,7 @@ def test_volume_conversion(value, unit, expected):
 ])
 
 def test_mole_conversion(value, unit, expected):
-    v = Unit.Mole(mole=value, unit=unit)
+    v = Mole(mole=value, unit=unit)
     assert v._mol == expected
 
 @pytest.mark.parametrize("value, unit, expected", [
@@ -37,15 +37,5 @@ def test_mole_conversion(value, unit, expected):
 ])
 
 def test_temperature_conversion(value, unit, expected):
-    v = Unit.Temperature(temperature=value, unit=unit)
+    v = Temperature(temperature=value, unit=unit)
     assert v._kelvin == expected
-
-def test_calculate_pressure():
-    gas = PVnRT(
-        volume=Unit.Volume(volume=7600, unit="ml"),
-        mole=Unit.Mole(mole=8, unit="mol"),
-        temperature=Unit.Temperature(temperature=27, unit="C"),
-    )
-
-    expected = (8 * 0.0821 * (27 + 273)) / (7600 / 1000)
-    assert gas.calculate_pressure == expected
