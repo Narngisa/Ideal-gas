@@ -14,8 +14,13 @@ class Pressure:
     pressure: float
     unit: PressureUnit
 
+    def __post_init__(self):
+        if self.pressure <= 0:
+            raise ValueError("Pressure must be greater than zero")
+
+
     @property
-    def _atmosphere(self) -> float:
+    def atmosphere(self) -> float:
         if self.unit == "atm":
             return self.pressure
         elif self.unit == "Torr" or self.unit == "mmHg":
@@ -28,8 +33,12 @@ class Volume:
     volume: float
     unit: VolumeUnit
 
+    def __post_init__(self):
+        if self.volume <= 0:
+            raise ValueError("Volume must be greater than zero")
+
     @property
-    def _liter(self) -> float:
+    def liter(self) -> float:
         if self.unit == "L" or self.unit == "dm3":
             return self.volume
         elif self.unit == "ml" or self.unit == "cm3":
@@ -42,8 +51,12 @@ class Mole:
     mole: float
     unit: MoleUnit
 
+    def __post_init__(self):
+        if self.mole <= 0:
+            raise ValueError("Mole must be greater than zero")
+
     @property
-    def _mol(self) -> float:
+    def mol(self) -> float:
         if self.unit == "mol":
             return self.mole
         raise ValueError(f"Unsupported mole unit: {self.unit}")
@@ -54,8 +67,12 @@ class Temperature:
     temperature: float
     unit: TemperatureUnit
 
+    def __post_init__(self):
+        if self.kelvin <= 0:
+            raise ValueError("Temperature must be greater than zero")
+
     @property
-    def _kelvin(self) -> float:
+    def kelvin(self) -> float:
         if self.unit == "K":
             return self.temperature
         elif self.unit == "C":
@@ -79,7 +96,7 @@ class PVnRT:
         if (self.volume is None or self.mole is None or self.temperature is None):
             raise ValueError("volume, mole and temperature are required")
 
-        return (self.mole._mol * gas_constant * self.temperature._kelvin) / self.volume._liter
+        return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.volume.liter
 
     @property
     def calculate_volume(self):
@@ -90,7 +107,7 @@ class PVnRT:
         if (self.pressure is None or self.mole is None or self.temperature is None):
             raise ValueError("pressure, mole and temperature are required")
 
-        return (self.mole._mol * gas_constant * self.temperature._kelvin) / self.pressure._atmosphere
+        return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
 
     @property
     def calculate_mole(self):
@@ -101,10 +118,12 @@ class PVnRT:
         if (self.pressure is None or self.volume is None or self.temperature is None):
             raise ValueError("pressure, volume and temperature are required")
 
-        return (self.pressure._atmosphere * self.volume._liter) / (gas_constant * self.temperature._kelvin)
+        return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
 
     @property
     def calculate_temperature(self):
+
+        """Return temperature in Kelvin"""
 
         if self.temperature is not None:
             raise ValueError("temperature already exists")
@@ -112,4 +131,4 @@ class PVnRT:
         if (self.pressure is None or self.volume is None or self.mole is None):
             raise ValueError("pressure, volume and mole are required")
 
-        return (self.pressure._atmosphere * self.volume._liter) / (self.mole._mol * gas_constant)
+        return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * gas_constant)
