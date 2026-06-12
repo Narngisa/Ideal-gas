@@ -7,6 +7,8 @@ PressureUnit = Literal["atm", "Torr", "mmHg"]
 VolumeUnit = Literal["ml", "cm3", "L", "dm3"]
 MoleUnit = Literal["mol"]
 TemperatureUnit = Literal["K", "C"]
+GramUnit = Literal["g", "kg"]
+MolarMassUnit = Literal["g/mol"]
 
 @dataclass
 class Pressure:
@@ -80,6 +82,40 @@ class Temperature:
         raise ValueError(f"Unsupported temperature unit: {self.unit}")
 
 @dataclass
+class Gram:
+    _: KW_ONLY
+    gram: float
+    unit: GramUnit
+
+    def __post_init__(self):
+        if self.gram <= 0:
+            raise ValueError("Gram must be greater than zero")
+
+    @property
+    def grams(self) -> float:
+        if self.unit == "g":
+            return self.gram
+        elif self.unit == "kg":
+            return self.gram * 1000
+        raise ValueError(f"Unsupported temperature unit: {self.unit}")
+
+@dataclass
+class MolarMass:
+    _: KW_ONLY
+    molar_mass: float
+    unit: MolarMassUnit
+
+    def __post_init__(self):
+        if self.molar_mass <= 0:
+            raise ValueError("Molar mass must be greater than zero")
+
+    @property
+    def gram_per_mol(self) -> float:
+        if self.unit == "g/mol":
+            return self.molar_mass
+        raise ValueError(f"Unsupported temperature unit: {self.unit}")
+
+@dataclass
 class PVnRT:
     _: KW_ONLY
     pressure: Optional[Pressure] = None
@@ -94,7 +130,7 @@ class PVnRT:
             raise ValueError("pressure already exists")
 
         if (self.volume is None or self.mole is None or self.temperature is None):
-            raise ValueError("volume, mole and temperature are required")
+            raise ValueError("volume, mole, and temperature are required")
 
         return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.volume.liter
 
@@ -105,7 +141,7 @@ class PVnRT:
             raise ValueError("volume already exists")
 
         if (self.pressure is None or self.mole is None or self.temperature is None):
-            raise ValueError("pressure, mole and temperature are required")
+            raise ValueError("pressure, mole, and temperature are required")
 
         return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
 
@@ -116,7 +152,7 @@ class PVnRT:
             raise ValueError("mole already exists")
 
         if (self.pressure is None or self.volume is None or self.temperature is None):
-            raise ValueError("pressure, volume and temperature are required")
+            raise ValueError("pressure, volume, and temperature are required")
 
         return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
 
@@ -129,6 +165,61 @@ class PVnRT:
             raise ValueError("temperature already exists")
 
         if (self.pressure is None or self.volume is None or self.mole is None):
-            raise ValueError("pressure, volume and mole are required")
+            raise ValueError("pressure, volume, and mole are required")
 
         return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * gas_constant)
+
+@dataclass
+class PV_gMRT:
+    _: KW_ONLY
+    pressure: Optional[Pressure] = None
+    volume: Optional[Volume] = None
+    gram: Optional[Gram] = None
+    molar_mass: Optional[MolarMass] = None
+    temperature: Optional[Temperature] = None
+
+    @property
+    def calculate_pressure(self):
+        if self.pressure is not None:
+            raise ValueError("pressure already exists")
+
+        if (self.volume is None or self.gram is None or self.molar_mass is None or self.temperature is None):
+            raise ValueError("volume, gram, molar mass, and temperature are required")
+
+        return ((self.gram.grams / self.molar_mass.gram_per_mol) * gas_constant * self.temperature.kelvin) / self.volume.liter
+
+    @property
+    def calculate_volume(self):
+        if self.volume is not None:
+            raise ValueError("volume already exists")
+        if (self.pressure is None or self.gram is None or self.molar_mass is None or self.temperature is None):
+            raise ValueError("pressure, gram, molar mass, and temperature are required")
+
+        return ((self.gram.grams / self.molar_mass.gram_per_mol) * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
+
+    @property
+    def calculate_gram(self):
+        if self.gram is not None:
+            raise ValueError("gram already exists")
+        if (self.pressure is None or self.volume is None or self.molar_mass is None or self.temperature is None):
+            raise ValueError("pressure, volume, molar mass, and temperature are required")
+
+        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (gas_constant * self.temperature.kelvin)
+
+    @property
+    def calculate_molar_mass(self):
+        if self.molar_mass is not None:
+            raise ValueError("molar mass already exists")
+        if (self.pressure is None or self.volume is None or self.gram is None or self.temperature is None):
+            raise ValueError("pressure, volume, gram, and temperature are required")
+
+        return (self.gram.grams * gas_constant * self.temperature.kelvin) / (self.pressure.atmosphere * self.volume.liter)
+
+    @property
+    def calculate_temperature(self):
+        if self.temperature is not None:
+            raise ValueError("temperature already exists")
+        if (self.pressure is None or self.volume is None or self.gram is None or self.molar_mass is None):
+            raise ValueError("pressure, volume, gram, and molar mass are required")
+
+        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) /(self.gram.grams * gas_constant)
