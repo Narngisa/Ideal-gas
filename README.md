@@ -14,16 +14,19 @@ Pure Python `version >= 3.10`
 - Volume `ml`, `cm3`, `L` and `dm3`
 - Mole `mol`
 - Temperature `C` and `K`
+- Gram `g` and `kg`
+- Molar mass `g/mol`
 
-### Config
+### Config Value
 - Gas Constant (R) `0.0821`
 - Kelvin (K) `273`
 
 ### Function
 - PV=nRT
+- PV=(g/M)RT
 
 ## ⚙️Install
-1. Download ideal_gas.py
+You can download file ideal_gas.py and import it to use in your file main.
 
 ## 📃Example
 ```py
