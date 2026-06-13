@@ -1,4 +1,4 @@
-from ideal_gas import Pressure, Volume, Mole, Temperature
+from ideal_gas import Gram, Pressure, Volume, Mole, Temperature
 import pytest
 
 @pytest.mark.parametrize("value, unit, expected",[
@@ -65,3 +65,17 @@ def test_temperature_kelvin_zero():
 def test_temperature_above_absolute_zero():
     t = Temperature(temperature=-272, unit="C")
     assert t.kelvin == 1
+
+@pytest.mark.parametrize("value, unit, expected", [
+    (1000, "g", 1000),
+    (1, "kg", 1000)
+])
+
+def test_gram_conversion(value, unit, expected):
+    g = Gram(gram=value, unit=unit)
+    assert g.grams == expected
+
+def test_gram_zero():
+    with pytest.raises(ValueError, match="Gram must be greater than zero"):
+        Gram(gram=0, unit="g")
+        Gram(gram=0, unit="kg")
