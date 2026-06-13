@@ -1,4 +1,4 @@
-from ideal_gas import Gram, Pressure, Volume, Mole, Temperature
+from ideal_gas import Gram, MolarMass, Pressure, Volume, Mole, Temperature
 import pytest
 
 @pytest.mark.parametrize("value, unit, expected",[
@@ -79,3 +79,15 @@ def test_gram_zero():
     with pytest.raises(ValueError, match="Gram must be greater than zero"):
         Gram(gram=0, unit="g")
         Gram(gram=0, unit="kg")
+
+@pytest.mark.parametrize("value, unit, expected", [
+    (1, "g/mol", 1)
+])
+
+def test_molar_mass_conversion(value, unit, expected):
+    mm = MolarMass(molar_mass=value, unit=unit)
+    assert mm.molar_mass == expected
+
+def test_molar_mass_zero():
+    with pytest.raises(ValueError, match="Molar mass must be greater than zero"):
+        MolarMass(molar_mass=0, unit="g/mol")
