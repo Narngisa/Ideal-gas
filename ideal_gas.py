@@ -214,4 +214,4 @@ class PV_gMRT:
         if (self.pressure is None or self.volume is None or self.gram is None or self.molar_mass is None):
             raise ValueError("pressure, volume, gram, and molar mass are required")
 
-        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) /(self.gram.grams * gas_constant)
+        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (self.gram.grams * gas_constant)
