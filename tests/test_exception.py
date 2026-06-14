@@ -27,7 +27,7 @@ def test_calculate_raise_temperature_exits():
     gas_PV_nRT = PVnRT(temperature=Temperature(temperature=300, unit="K"))
     gas_PV_gMRT = PVgMRT(temperature=Temperature(temperature=300, unit="K"))
 
-    with pytest.raises(ValueError, match="mole already exists"):
+    with pytest.raises(ValueError, match="temperature already exists"):
         gas_PV_nRT.calculate_temperature
         gas_PV_gMRT.calculate_temperature
 
@@ -40,5 +40,5 @@ def test_calculate_raise_gram_exits():
 def test_calculate_raise_molar_mass_exits():
     gas_PV_gMRT = PVgMRT(molar_mass=MolarMass(molar_mass=10, unit="g/mol"))
 
-    with pytest.raises(ValueError, match="gram already exists"):
+    with pytest.raises(ValueError, match="molar mass already exists"):
         gas_PV_gMRT.calculate_molar_mass
