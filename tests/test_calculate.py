@@ -8,7 +8,7 @@ def test_calculate_pressure():
     )
 
     expected_PVnRT = (8 * 0.0821 * (27 + 273)) / (7600 / 1000)
-    assert abs(gas_PVnRT.calculate_pressure - expected_PVnRT) < 1e-9
+    assert abs(gas_PVnRT.calculate_pressure - expected_PVnRT) < 1e-12
 
     gas_PVgMRT = PVgMRT(
         volume=Volume(volume=3, unit="L"),
@@ -18,7 +18,7 @@ def test_calculate_pressure():
     )
 
     expected_PVgMRT = (((4 * 1000) / 8) * 0.0821 * (45 + 273)) / 3
-    assert abs(gas_PVgMRT.calculate_pressure - expected_PVgMRT) < 1e-9
+    assert abs(gas_PVgMRT.calculate_pressure - expected_PVgMRT) < 1e-12
 
 def test_calculate_volume():
     gas_PVnRT = PVnRT(
@@ -28,7 +28,7 @@ def test_calculate_volume():
     )
 
     expected_PVnRT = (7 * 0.0821 * (298)) / (1520 / 760)
-    assert abs(gas_PVnRT.calculate_volume - expected_PVnRT) < 1e-9
+    assert abs(gas_PVnRT.calculate_volume - expected_PVnRT) < 1e-12
 
     gas_PVgMRT = PVgMRT(
         pressure=Pressure(pressure=760, unit="mmHg"),
@@ -38,7 +38,7 @@ def test_calculate_volume():
     )
 
     expected_PVgMRT = ((20 / 3) * 0.0821 * 300) / (760 / 760)
-    assert abs(gas_PVgMRT.calculate_volume - expected_PVgMRT) < 1e-9
+    assert abs(gas_PVgMRT.calculate_volume - expected_PVgMRT) < 1e-12
 
 def test_calculate_mole():
     gas_PVnRT = PVnRT(
@@ -48,7 +48,7 @@ def test_calculate_mole():
     )
 
     expected_PVnRT = ((3800 / 760) * 7) / (0.0821 * (45 + 273))
-    assert abs(gas_PVnRT.calculate_mole - expected_PVnRT) < 1e-9
+    assert abs(gas_PVnRT.calculate_mole - expected_PVnRT) < 1e-12
 
 def test_calculate_temperature():
     gas_PVnRT = PVnRT(
@@ -58,7 +58,7 @@ def test_calculate_temperature():
     )
 
     expected_PVnRT = (2 * (41 / 1000)) / (0.0821 * 21)
-    assert abs(gas_PVnRT.calculate_temperature - expected_PVnRT) < 1e-9
+    assert abs(gas_PVnRT.calculate_temperature - expected_PVnRT) < 1e-12
 
     gas_PVgMRT = PVgMRT(
         pressure=Pressure(pressure=12, unit="atm"),
@@ -68,7 +68,7 @@ def test_calculate_temperature():
     )
 
     expected_PVgMRT = (12 * (30 / 1000) * 3) / (20 * 0.0821)
-    assert abs(gas_PVgMRT.calculate_temperature - expected_PVgMRT) < 1e-9
+    assert abs(gas_PVgMRT.calculate_temperature - expected_PVgMRT) < 1e-12
 
 def test_calculate_gram():
     gas_PVgMRT = PVgMRT(
@@ -79,7 +79,7 @@ def test_calculate_gram():
     )
 
     expected_PVgMRT = ((760 / 760) * 20 * 3) / (0.0821 * 300)
-    assert abs(gas_PVgMRT.calculate_gram - expected_PVgMRT) < 1e-9
+    assert abs(gas_PVgMRT.calculate_gram - expected_PVgMRT) < 1e-12
 
 def test_calculate_molar_mass():
     gas_PVgMRT = PVgMRT(
@@ -90,4 +90,4 @@ def test_calculate_molar_mass():
     )
 
     expected_PVgMRT = ((6 * 1000) * 0.0821 * (25 + 273)) / ((1520 / 760) * (20 / 1000))
-    assert abs(gas_PVgMRT.calculate_molar_mass - expected_PVgMRT) < 1e-9
+    assert abs(gas_PVgMRT.calculate_molar_mass - expected_PVgMRT) < 1e-12
