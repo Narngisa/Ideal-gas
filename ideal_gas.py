@@ -1,4 +1,4 @@
-from dataclasses import KW_ONLY, dataclass
+from dataclasses import dataclass
 from typing import Optional, Literal
 
 gas_constant = 0.0821
@@ -10,9 +10,8 @@ TemperatureUnit = Literal["K", "C"]
 GramUnit = Literal["g", "kg"]
 MolarMassUnit = Literal["g/mol"]
 
-@dataclass
+@dataclass(kw_only=True)
 class Pressure:
-    _: KW_ONLY
     pressure: float
     unit: PressureUnit
 
@@ -29,9 +28,8 @@ class Pressure:
             return self.pressure / 760
         raise ValueError(f"Unsupported pressure unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class Volume:
-    _: KW_ONLY
     volume: float
     unit: VolumeUnit
 
@@ -47,9 +45,8 @@ class Volume:
             return self.volume / 1000
         raise ValueError(f"Unsupported volume unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class Mole:
-    _: KW_ONLY
     mole: float
     unit: MoleUnit
 
@@ -63,9 +60,8 @@ class Mole:
             return self.mole
         raise ValueError(f"Unsupported mole unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class Temperature:
-    _: KW_ONLY
     temperature: float
     unit: TemperatureUnit
 
@@ -81,9 +77,8 @@ class Temperature:
             return self.temperature + 273
         raise ValueError(f"Unsupported temperature unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class Gram:
-    _: KW_ONLY
     gram: float
     unit: GramUnit
 
@@ -99,9 +94,8 @@ class Gram:
             return self.gram * 1000
         raise ValueError(f"Unsupported temperature unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class MolarMass:
-    _: KW_ONLY
     molar_mass: float
     unit: MolarMassUnit
 
@@ -115,9 +109,8 @@ class MolarMass:
             return self.molar_mass
         raise ValueError(f"Unsupported temperature unit: {self.unit}")
 
-@dataclass
+@dataclass(kw_only=True)
 class PVnRT:
-    _: KW_ONLY
     pressure: Optional[Pressure] = None
     volume: Optional[Volume] = None
     mole: Optional[Mole] = None
@@ -169,9 +162,8 @@ class PVnRT:
 
         return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * gas_constant)
 
-@dataclass
+@dataclass(kw_only=True)
 class PV_gMRT:
-    _: KW_ONLY
     pressure: Optional[Pressure] = None
     volume: Optional[Volume] = None
     gram: Optional[Gram] = None
