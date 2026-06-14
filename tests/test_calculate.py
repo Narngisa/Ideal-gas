@@ -1,4 +1,4 @@
-from ideal_gas import PVnRT, PV_gMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
+from ideal_gas import PVnRT, PVgMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
 
 def test_calculate_pressure_PVnRT():
     gas = PVnRT(
@@ -41,7 +41,7 @@ def test_calculate_temperature_PVnRT():
     assert gas.calculate_temperature == expected
 
 def test_calculate_pressure_PVgMRT():
-    gas = PV_gMRT(
+    gas = PVgMRT(
         volume=Volume(volume=3, unit="L"),
         gram=Gram(gram=4, unit="kg"),
         molar_mass=MolarMass(molar_mass=8, unit="g/mol"),
@@ -52,7 +52,7 @@ def test_calculate_pressure_PVgMRT():
     assert gas.calculate_pressure == expected
 
 def test_calculate_volume_PVgMRT():
-    gas = PV_gMRT(
+    gas = PVgMRT(
         pressure=Pressure(pressure=760, unit="mmHg"),
         gram=Gram(gram=20, unit="g"),
         molar_mass=MolarMass(molar_mass=3, unit="g/mol"),
@@ -63,7 +63,7 @@ def test_calculate_volume_PVgMRT():
     assert gas.calculate_volume == expected
 
 def test_calculate_gram_PVgMRT():
-    gas = PV_gMRT(
+    gas = PVgMRT(
         pressure=Pressure(pressure=760, unit="mmHg"),
         volume=Volume(volume=20, unit="dm3"),
         molar_mass=MolarMass(molar_mass=3, unit="g/mol"),
@@ -74,7 +74,7 @@ def test_calculate_gram_PVgMRT():
     assert gas.calculate_gram == expected
 
 def test_calculate_molar_mass_PVgMRT():
-    gas = PV_gMRT(
+    gas = PVgMRT(
         pressure=Pressure(pressure=1520, unit="Torr"),
         volume=Volume(volume=20, unit="ml"),
         gram=Gram(gram=6, unit="kg"),
@@ -85,7 +85,7 @@ def test_calculate_molar_mass_PVgMRT():
     assert gas.calculate_molar_mass == expected
 
 def test_calculate_temperature_PVgMRT():
-    gas = PV_gMRT(
+    gas = PVgMRT(
         pressure=Pressure(pressure=12, unit="atm"),
         volume=Volume(volume=30, unit="cm3"),
         gram=Gram(gram=20, unit="g"),

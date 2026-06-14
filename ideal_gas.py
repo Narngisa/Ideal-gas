@@ -163,7 +163,7 @@ class PVnRT:
         return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * gas_constant)
 
 @dataclass(kw_only=True)
-class PV_gMRT:
+class PVgMRT:
     pressure: Optional[Pressure] = None
     volume: Optional[Volume] = None
     gram: Optional[Gram] = None
