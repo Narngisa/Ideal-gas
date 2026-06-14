@@ -29,6 +29,8 @@ Pure Python `version >= 3.10`
 You can download file ideal_gas.py and import it to use in your file main.
 
 ## 📃Example
+
+### PV = nRT
 ```py
 from ideal_gas import PVnRT, Volume, Mole, Temperature
 # Pressure, Volume, Mole, Temperature
@@ -40,6 +42,22 @@ gas = PVnRT(
 )
 
 # Pressure ~ 25.92631
+print(gas.calculate_pressure)
+```
+
+### PV = (g/M)RT
+```py
+from ideal_gas import PVgMRT, Volume, Gram, MolarMass, Temperature
+# Pressure, Volume, Gram, MolarMass, Temperature
+
+gas = PVgMRT(
+    volume=Volume(volume=400, unit="ml"),
+    gram=Gram(gram=5, unit="kg"),
+    molar_mass=MolarMass(molar_mass=4, unit="g/mol"),
+    temperature=Temperature(temperature=298, unit="K"),
+)
+
+# Pressure ~ 76,455.625
 print(gas.calculate_pressure)
 ```
 
