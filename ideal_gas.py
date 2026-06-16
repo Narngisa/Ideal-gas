@@ -9,6 +9,7 @@ MoleUnit = Literal["mol"]
 TemperatureUnit = Literal["K", "C"]
 GramUnit = Literal["g", "kg"]
 MolarMassUnit = Literal["g/mol"]
+DensityUnit = Literal["g/L"]
 
 @dataclass(kw_only=True)
 class Pressure:
@@ -92,7 +93,7 @@ class Gram:
             return self.gram
         elif self.unit == "kg":
             return self.gram * 1000
-        raise ValueError(f"Unsupported temperature unit: {self.unit}")
+        raise ValueError(f"Unsupported gram unit: {self.unit}")
 
 @dataclass(kw_only=True)
 class MolarMass:
@@ -107,7 +108,22 @@ class MolarMass:
     def gram_per_mol(self) -> float:
         if self.unit == "g/mol":
             return self.molar_mass
-        raise ValueError(f"Unsupported temperature unit: {self.unit}")
+        raise ValueError(f"Unsupported molar mass unit: {self.unit}")
+
+@dataclass(kw_only=True)
+class Density:
+    density: float
+    unit: DensityUnit
+
+    def __post_init__(self):
+        if self.density <= 0:
+            raise ValueError("Density must be greater than zero")
+
+    @property
+    def gram_per_liter(self) -> float:
+        if self.unit == "g/L":
+            return self.density
+        raise ValueError(f"Unsupported density unit: {self.unit}")
 
 @dataclass(kw_only=True)
 class PVnRT:
@@ -215,3 +231,9 @@ class PVgMRT:
             raise ValueError("pressure, volume, gram, and molar mass are required")
 
         return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (self.gram.grams * gas_constant)
+
+@dataclass(kw_only=True)
+class PVdRT:
+    pressure: Optional[Pressure]
+    volume: Optional[Volume]
+    temperature: Optional[Temperature]
