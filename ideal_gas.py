@@ -234,10 +234,10 @@ class PVgMRT:
 
 @dataclass(kw_only=True)
 class PVdRT:
-    pressure: Optional[Pressure]
-    volume: Optional[Volume]
-    density: Optional[Density]
-    temperature: Optional[Temperature]
+    pressure: Optional[Pressure] = None
+    volume: Optional[Volume] = None
+    density: Optional[Density] = None
+    temperature: Optional[Temperature] = None
 
     @property
     def calculate_pressure(self):

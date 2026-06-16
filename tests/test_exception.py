@@ -1,13 +1,15 @@
-from ideal_gas import PVnRT, PVgMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
+from ideal_gas import PVdRT, PVnRT, PVgMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
 import pytest
 
 def test_raise_pressure_exits():
     gas_PV_nRT = PVnRT(pressure=Pressure(pressure=1, unit="atm"))
     gas_PV_gMRT = PVgMRT(pressure=Pressure(pressure=1, unit="atm"))
+    gas_PV_dRT = PVdRT(pressure=Pressure(pressure=1, unit="atm"))
 
     with pytest.raises(ValueError, match="pressure already exists"):
         gas_PV_nRT.calculate_pressure
         gas_PV_gMRT.calculate_pressure
+        gas_PV_dRT.calculate_pressure
 
 def test_raise_volume_exits():
     gas_PV_nRT = PVnRT(volume=Volume(volume=1000, unit="cm3"))
