@@ -1,4 +1,4 @@
-from ideal_gas import PVnRT, PVgMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
+from ideal_gas import Density, PVdRT, PVnRT, PVgMRT, Pressure, Volume, Mole, Temperature, Gram, MolarMass
 
 def test_calculate_pressure():
     gas_PV_nRT = PVnRT(
@@ -20,6 +20,15 @@ def test_calculate_pressure():
     expected_PV_gMRT = (((4 * 1000) / 8) * 0.0821 * (45 + 273)) / 3
     assert abs(gas_PV_gMRT.calculate_pressure - expected_PV_gMRT) < 1e-12
 
+    gas_PV_dRT = PVdRT(
+        volume=Volume(volume=12, unit="L"),
+        density=Density(density=5, unit="g/L"),
+        temperature=Temperature(temperature=330, unit="K")
+    )
+
+    expected_PV_dRT = (5 * 0.0821 * 330) / 12
+    assert abs(gas_PV_dRT.calculate_pressure - expected_PV_dRT) < 1e-12
+
 def test_calculate_volume():
     gas_PV_nRT = PVnRT(
         pressure=Pressure(pressure=1520, unit="mmHg"),
@@ -39,6 +48,15 @@ def test_calculate_volume():
 
     expected_PV_gMRT = ((20 / 3) * 0.0821 * 300) / (760 / 760)
     assert abs(gas_PV_gMRT.calculate_volume - expected_PV_gMRT) < 1e-12
+
+    gas_PV_dRT = PVdRT(
+        pressure=Pressure(pressure=6, unit="atm"),
+        density=Density(density=8, unit="g/L"),
+        temperature=Temperature(temperature=325, unit="K")
+    )
+
+    expected_PV_dRT = (8 * 0.0821 * 325) / 6
+    assert abs(gas_PV_dRT.calculate_volume - expected_PV_dRT) < 1e-12
 
 def test_calculate_mole():
     gas_PV_nRT = PVnRT(
@@ -70,6 +88,15 @@ def test_calculate_temperature():
     expected_PV_gMRT = (12 * (30 / 1000) * 3) / (20 * 0.0821)
     assert abs(gas_PV_gMRT.calculate_temperature - expected_PV_gMRT) < 1e-12
 
+    gas_PV_dRT = PVdRT(
+        pressure=Pressure(pressure=760, unit="Torr"),
+        volume=Volume(volume=17, unit="L"),
+        density=Density(density=8, unit="g/L"),
+    )
+
+    expected_PV_dRT = ((760 / 760) * 17) / (8 * 0.0821)
+    assert abs(gas_PV_dRT.calculate_temperature - expected_PV_dRT) < 1e-12
+
 def test_calculate_gram():
     gas_PV_gMRT = PVgMRT(
         pressure=Pressure(pressure=760, unit="mmHg"),
@@ -91,3 +118,13 @@ def test_calculate_molar_mass():
 
     expected_PV_gMRT = ((6 * 1000) * 0.0821 * (25 + 273)) / ((1520 / 760) * (20 / 1000))
     assert abs(gas_PV_gMRT.calculate_molar_mass - expected_PV_gMRT) < 1e-12
+
+def test_calculate_density():
+    gas_PV_dRT = PVdRT(
+        pressure=Pressure(pressure=7, unit="atm"),
+        volume=Volume(volume=100, unit="ml"),
+        temperature=Temperature(temperature=27, unit="C")
+    )
+
+    expected_PV_dRT = (7 * (100 / 1000) / (0.0821 * (27 + 273)))
+    assert abs(gas_PV_dRT.calculate_density - expected_PV_dRT) < 1e-12
