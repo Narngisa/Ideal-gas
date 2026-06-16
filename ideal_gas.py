@@ -251,7 +251,7 @@ class PVdRT:
     @property
     def calculate_volume(self):
         if self.volume is not None:
-            raise ValueError("pressure is already exists")
+            raise ValueError("volume is already exists")
         if (self.pressure is None or self.density is None or self.temperature is None):
             raise ValueError("pressure, density, and temperture are required")
 
@@ -260,8 +260,17 @@ class PVdRT:
     @property
     def calculate_density(self):
         if self.density is not None:
-            raise ValueError("pressure is already exists")
+            raise ValueError("density is already exists")
         if (self.pressure is None or self.volume is None or self.temperature is None):
             raise ValueError("pressure, volume, and temperture are required")
 
         return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
+
+    @property
+    def calculate_temperature(self):
+        if self.temperature is not None:
+            raise ValueError("temperature is already exists")
+        if (self.pressure is None or self.volume is None or self.density is None):
+            raise ValueError("pressure, volume, and density are required")
+
+        return (self.pressure.atmosphere * self.volume.liter) / (self.density.gram_per_liter * gas_constant)
