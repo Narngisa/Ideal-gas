@@ -236,4 +236,32 @@ class PVgMRT:
 class PVdRT:
     pressure: Optional[Pressure]
     volume: Optional[Volume]
+    density: Optional[Density]
     temperature: Optional[Temperature]
+
+    @property
+    def calculate_pressure(self):
+        if self.pressure is not None:
+            raise ValueError("pressure is already exists")
+        if (self.volume is None or self.density is None or self.temperature is None):
+            raise ValueError("volume, density, and temperture are required")
+
+        return (self.density.gram_per_liter * gas_constant * self.temperature.kelvin) / self.volume.liter
+
+    @property
+    def calculate_volume(self):
+        if self.volume is not None:
+            raise ValueError("pressure is already exists")
+        if (self.pressure is None or self.density is None or self.temperature is None):
+            raise ValueError("pressure, density, and temperture are required")
+
+        return (self.density.gram_per_liter * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
+
+    @property
+    def calculate_density(self):
+        if self.density is not None:
+            raise ValueError("pressure is already exists")
+        if (self.pressure is None or self.volume is None or self.temperature is None):
+            raise ValueError("pressure, volume, and temperture are required")
+
+        return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
