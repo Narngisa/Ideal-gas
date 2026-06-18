@@ -16,6 +16,7 @@ Pure Python `version >= 3.10`
 - Temperature `C` and `K`
 - Gram `g` and `kg`
 - Molar mass `g/mol`
+- Density `g/L`
 
 ### Config Value
 - Gas Constant (R) `0.0821`
@@ -24,6 +25,7 @@ Pure Python `version >= 3.10`
 ### Function
 - PV=nRT
 - PV=(g/M)RT
+- PV=dRT
 
 ## ⚙️Install
 You can download file ideal_gas.py and import it to use in your file main.
@@ -58,6 +60,21 @@ gas = PVgMRT(
 )
 
 # Pressure ~ 76,455.625
+print(gas.calculate_pressure)
+```
+
+### PV = dRT
+```py
+from ideal_gas import PVdRT, Volume, Density, Temperature
+# Pressure, Volume, Density, Temperature
+
+gas = PVdRT(
+    volume=Volume(volume=800, unit="ml"),
+    density=Density(density=2, unit="g/L"),
+    temperature=Temperature(temperature=300, unit="K"),
+)
+
+# Pressure ~ 61.575
 print(gas.calculate_pressure)
 ```
 

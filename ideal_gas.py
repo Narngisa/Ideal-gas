@@ -10,6 +10,7 @@ TemperatureUnit = Literal["K", "C"]
 GramUnit = Literal["g", "kg"]
 MolarMassUnit = Literal["g/mol"]
 DensityUnit = Literal["g/L"]
+MolarityUnit = Literal["mol/dm3"]
 
 @dataclass(kw_only=True)
 class Pressure:
@@ -124,6 +125,15 @@ class Density:
         if self.unit == "g/L":
             return self.density
         raise ValueError(f"Unsupported density unit: {self.unit}")
+
+@dataclass(kw_only=True)
+class Molarity:
+    molarity: float
+    unit: MolarityUnit
+
+    def __post_init__(self):
+        if self.molarity <= 0:
+            raise ValueError("Molarity must be greater than zero")
 
 @dataclass(kw_only=True)
 class PVnRT:
@@ -274,3 +284,9 @@ class PVdRT:
             raise ValueError("pressure, volume, and density are required")
 
         return (self.pressure.atmosphere * self.volume.liter) / (self.density.gram_per_liter * gas_constant)
+
+@dataclass(kw_only=True)
+class PMRT:
+    pressure: Optional[Pressure] = None
+    molarity
+    temperature: Optional[Temperature] = None
