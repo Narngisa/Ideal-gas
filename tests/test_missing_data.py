@@ -1,4 +1,4 @@
-from ideal_gas import Density, Gram, MolarMass, PVdRT, PVgMRT, PVnRT, Pressure, Volume, Mole, Temperature
+from ideal_gas import PMRT, Density, Gram, MolarMass, Molarity, PVdRT, PVgMRT, PVnRT, Pressure, Volume, Mole, Temperature
 import pytest
 
 def test_pressure_missing_data():
@@ -13,6 +13,10 @@ def test_pressure_missing_data():
     gas_PV_dRT = PVdRT(density=Density(density=4, unit="g/L"))
     with pytest.raises(ValueError, match="volume, density, and temperature are required"):
         gas_PV_dRT.calculate_pressure
+
+    gas_P_MRT = PMRT(temperature=Temperature(temperature=7, unit="C"))
+    with pytest.raises(ValueError, match="molarity, and temperature are required"):
+        gas_P_MRT.calculate_pressure
 
 def test_volume_missing_data():
     gas_PV_nRT = PVnRT(pressure=Pressure(pressure=2, unit="Torr"))
@@ -45,6 +49,10 @@ def test_temperature_missing_data():
     with pytest.raises(ValueError, match="pressure, volume, and density are required"):
         gas_PV_dRT.calculate_temperature
 
+    gas_P_MRT = PMRT(molarity=Molarity(molarity=7, unit="mol/L"))
+    with pytest.raises(ValueError, match="pressure, and molarity are required"):
+        gas_P_MRT.calculate_temperature
+
 def test_gram_missing_data():
     gas_PV_gMRT = PVgMRT(molar_mass=MolarMass(molar_mass=7, unit="g/mol"))
     with pytest.raises(ValueError, match="pressure, volume, molar mass, and temperature are required"):
@@ -59,3 +67,8 @@ def test_density_missing_data():
     gas_PV_dRT = PVdRT(temperature=Temperature(temperature=27, unit="C"))
     with pytest.raises(ValueError, match="pressure, volume, and temperature are required"):
         gas_PV_dRT.calculate_density
+
+def test_malarity_missing_data():
+    gas_P_MRT = PMRT(pressure=Pressure(pressure=25, unit="atm"))
+    with pytest.raises(ValueError, match="pressure, and temperature are required"):
+        gas_P_MRT.calculate_molarity
