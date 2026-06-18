@@ -9,8 +9,8 @@ MoleUnit = Literal["mol"]
 TemperatureUnit = Literal["K", "C"]
 GramUnit = Literal["g", "kg"]
 MolarMassUnit = Literal["g/mol"]
-DensityUnit = Literal["g/L"]
-MolarityUnit = Literal["mol/dm3"]
+DensityUnit = Literal["g/L", "g/dm3"]
+MolarityUnit = Literal["mol/dm3", "mol/L"]
 
 @dataclass(kw_only=True)
 class Pressure:
@@ -122,7 +122,7 @@ class Density:
 
     @property
     def gram_per_liter(self) -> float:
-        if self.unit == "g/L":
+        if self.unit == "g/L" or self.unit == "g/dm3":
             return self.density
         raise ValueError(f"Unsupported density unit: {self.unit}")
 
@@ -134,6 +134,12 @@ class Molarity:
     def __post_init__(self):
         if self.molarity <= 0:
             raise ValueError("Molarity must be greater than zero")
+
+    @property
+    def mol_per_liter(self) -> float:
+        if self.unit == "mol/L" or self.unit == "mol/dm3":
+            return self.molarity
+        raise ValueError(f"Unsupported density unit: {self.unit}")
 
 @dataclass(kw_only=True)
 class PVnRT:
@@ -288,5 +294,32 @@ class PVdRT:
 @dataclass(kw_only=True)
 class PMRT:
     pressure: Optional[Pressure] = None
-    molarity
+    molarity: Optional[Molarity] = None
     temperature: Optional[Temperature] = None
+
+    @property
+    def calculate_pressure(self):
+        if self.pressure is not None:
+            raise ValueError("pressure already exists")
+        if (self.molarity is None or self.temperature is None):
+            raise ValueError("molarity, and temperature are required")
+
+        return (self.molarity.mol_per_liter * gas_constant * self.temperature.kelvin)
+
+    @property
+    def calculate_molarity(self):
+        if self.molarity is not None:
+            raise ValueError("molarity already exists")
+        if (self.pressure is None or self.temperature is None):
+            raise ValueError("pressure, and temperature are required")
+
+        return (self.pressure.atmosphere / (gas_constant * self.temperature.kelvin))
+
+    @property
+    def calculate_temperature(self):
+        if self.temperature is not None:
+            raise ValueError("temperature already exists")
+        if (self.pressure is None or self.molarity is None):
+            raise ValueError("pressure, and molarity are required")
+
+        return (self.pressure.atmosphere / (self.molarity.mol_per_liter * gas_constant))
