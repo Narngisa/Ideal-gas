@@ -1,4 +1,4 @@
-from ideal_gas import Density, Gram, MolarMass, Pressure, Volume, Mole, Temperature
+from ideal_gas import Density, Gram, MolarMass, Molarity, Pressure, Volume, Mole, Temperature
 import pytest
 
 @pytest.mark.parametrize("value, unit, expected",[
@@ -102,4 +102,19 @@ def test_density_conversion(value, unit, expected):
 
 def test_density_zero():
     with pytest.raises(ValueError, match="Density must be greater than zero"):
+        Density(density=0, unit="g/dm3")
         Density(density=0, unit="g/L")
+
+@pytest.mark.parametrize("value, unit, expected", [
+    (1, "mol/L", 1),
+    (1, "mol/dm3", 1)
+])
+
+def test_molarity_coversion(value, unit, expected):
+    m = Molarity(molarity=value, unit=unit)
+    assert m.mol_per_liter == expected
+
+def test_molarity_zero():
+    with pytest.raises(ValueError, match="Molarity must be greater than zero"):
+        Molarity(molarity=0, unit="mol/dm3")
+        Molarity(molarity=0, unit="mol/L")
