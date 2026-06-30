@@ -21,11 +21,11 @@ Pure Python `version >= 3.10`
 
 > [!IMPORTANT]
 > ### Default Mode
-> - Gas Constant (R) `0.082057`
-> - Kelvin (K) `273.15`
+> Gas Constant (R) `0.082057`
+> Kelvin (K) `273.15`
 > ### School Mode 
-> - Gas Constant (R) `0.0821`
-> - Kelvin (K) `273`
+> Gas Constant (R) `0.0821`
+> Kelvin (K) `273`
 
 ### Function
 - PV=nRT
@@ -98,7 +98,7 @@ gas = PMRT(
 print(gas.calculate_pressure)
 ```
 
-# Mode Gas Constant
+## Mode Gas Constant
 ```py
 from ideal_gas import PVnRT, Volume, Mole, Temperature, GasConstant
 # Pressure, Volume, Mole, Temperature
