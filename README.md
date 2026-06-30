@@ -17,6 +17,7 @@ Pure Python `version >= 3.10`
 - Gram `g` and `kg`
 - Molar mass `g/mol`
 - Density `g/L`
+- Molarity `mol/dm3` and `mol/L`
 
 ### Config Value
 - Gas Constant (R) `0.0821`
@@ -26,6 +27,7 @@ Pure Python `version >= 3.10`
 - PV=nRT
 - PV=(g/M)RT
 - PV=dRT
+- P=MRT
 
 ## ⚙️Install
 You can download file ideal_gas.py and import it to use in your file main.
@@ -75,6 +77,20 @@ gas = PVdRT(
 )
 
 # Pressure ~ 61.575
+print(gas.calculate_pressure)
+```
+
+### P = MRT
+```py
+from ideal_gas import PMRT, Molarity, Temperature
+# Pressure, Molarity, Temperature
+
+gas = PMRT(
+    molarity=molarity(volume=7, unit="mol/L"),
+    temperature=Temperature(temperature=300, unit="K"),
+)
+
+# Pressure ~ 172.41
 print(gas.calculate_pressure)
 ```
 
