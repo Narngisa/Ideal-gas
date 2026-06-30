@@ -19,9 +19,9 @@ Pure Python `version >= 3.10`
 - Density `g/L`
 - Molarity `mol/dm3` and `mol/L`
 
-### Config Value
-- Gas Constant (R) `0.0821`
-- Kelvin (K) `273`
+> [!IMPORTANT]
+> - Gas Constant (R) `0.0821`
+> - Kelvin (K) `273`
 
 ### Function
 - PV=nRT
