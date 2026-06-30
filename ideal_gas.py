@@ -1,7 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Literal
-
-gas_constant = 0.0821
 
 PressureUnit = Literal["atm", "Torr", "mmHg"]
 VolumeUnit = Literal["ml", "cm3", "L", "dm3"]
@@ -11,6 +9,10 @@ GramUnit = Literal["g", "kg"]
 MolarMassUnit = Literal["g/mol"]
 DensityUnit = Literal["g/L", "g/dm3"]
 MolarityUnit = Literal["mol/dm3", "mol/L"]
+
+# Gas Constant Value
+GAS_CONSTANT_DEFAULT = 0.082057
+GAS_CONSTANT_SCHOOL = 0.0821
 
 @dataclass(kw_only=True)
 class Pressure:
@@ -61,6 +63,14 @@ class Mole:
         if self.unit == "mol":
             return self.mole
         raise ValueError(f"Unsupported mole unit: {self.unit}")
+
+@dataclass(kw_only=True)
+class GasConstant:
+    school_mode: bool = False
+
+    @property
+    def gas_mode(self) -> float:
+        return GAS_CONSTANT_SCHOOL if self.school_mode else GAS_CONSTANT_DEFAULT
 
 @dataclass(kw_only=True)
 class Temperature:
@@ -147,6 +157,7 @@ class PVnRT:
     volume: Optional[Volume] = None
     mole: Optional[Mole] = None
     temperature: Optional[Temperature] = None
+    gas_constant: GasConstant = field(default_factory=lambda: GasConstant())
 
     @property
     def calculate_pressure(self):
@@ -157,7 +168,7 @@ class PVnRT:
         if (self.volume is None or self.mole is None or self.temperature is None):
             raise ValueError("volume, mole, and temperature are required")
 
-        return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.volume.liter
+        return (self.mole.mol * self.gas_constant.gas_mode * self.temperature.kelvin) / self.volume.liter
 
     @property
     def calculate_volume(self):
@@ -168,7 +179,7 @@ class PVnRT:
         if (self.pressure is None or self.mole is None or self.temperature is None):
             raise ValueError("pressure, mole, and temperature are required")
 
-        return (self.mole.mol * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
+        return (self.mole.mol * self.gas_constant.gas_mode * self.temperature.kelvin) / self.pressure.atmosphere
 
     @property
     def calculate_mole(self):
@@ -179,7 +190,7 @@ class PVnRT:
         if (self.pressure is None or self.volume is None or self.temperature is None):
             raise ValueError("pressure, volume, and temperature are required")
 
-        return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
+        return (self.pressure.atmosphere * self.volume.liter) / (self.gas_constant.gas_mode * self.temperature.kelvin)
 
     @property
     def calculate_temperature(self):
@@ -192,7 +203,7 @@ class PVnRT:
         if (self.pressure is None or self.volume is None or self.mole is None):
             raise ValueError("pressure, volume, and mole are required")
 
-        return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * gas_constant)
+        return (self.pressure.atmosphere * self.volume.liter) / (self.mole.mol * self.gas_constant.gas_mode)
 
 @dataclass(kw_only=True)
 class PVgMRT:
@@ -201,6 +212,7 @@ class PVgMRT:
     gram: Optional[Gram] = None
     molar_mass: Optional[MolarMass] = None
     temperature: Optional[Temperature] = None
+    gas_constant: GasConstant = field(default_factory=lambda: GasConstant())
 
     @property
     def calculate_pressure(self):
@@ -210,7 +222,7 @@ class PVgMRT:
         if (self.volume is None or self.gram is None or self.molar_mass is None or self.temperature is None):
             raise ValueError("volume, gram, molar mass, and temperature are required")
 
-        return ((self.gram.grams / self.molar_mass.gram_per_mol) * gas_constant * self.temperature.kelvin) / self.volume.liter
+        return ((self.gram.grams / self.molar_mass.gram_per_mol) * self.gas_constant.gas_mode * self.temperature.kelvin) / self.volume.liter
 
     @property
     def calculate_volume(self):
@@ -219,7 +231,7 @@ class PVgMRT:
         if (self.pressure is None or self.gram is None or self.molar_mass is None or self.temperature is None):
             raise ValueError("pressure, gram, molar mass, and temperature are required")
 
-        return ((self.gram.grams / self.molar_mass.gram_per_mol) * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
+        return ((self.gram.grams / self.molar_mass.gram_per_mol) * self.gas_constant.gas_mode * self.temperature.kelvin) / self.pressure.atmosphere
 
     @property
     def calculate_gram(self):
@@ -228,7 +240,7 @@ class PVgMRT:
         if (self.pressure is None or self.volume is None or self.molar_mass is None or self.temperature is None):
             raise ValueError("pressure, volume, molar mass, and temperature are required")
 
-        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (gas_constant * self.temperature.kelvin)
+        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (self.gas_constant.gas_mode * self.temperature.kelvin)
 
     @property
     def calculate_molar_mass(self):
@@ -237,7 +249,7 @@ class PVgMRT:
         if (self.pressure is None or self.volume is None or self.gram is None or self.temperature is None):
             raise ValueError("pressure, volume, gram, and temperature are required")
 
-        return (self.gram.grams * gas_constant * self.temperature.kelvin) / (self.pressure.atmosphere * self.volume.liter)
+        return (self.gram.grams * self.gas_constant.gas_mode * self.temperature.kelvin) / (self.pressure.atmosphere * self.volume.liter)
 
     @property
     def calculate_temperature(self):
@@ -246,7 +258,7 @@ class PVgMRT:
         if (self.pressure is None or self.volume is None or self.gram is None or self.molar_mass is None):
             raise ValueError("pressure, volume, gram, and molar mass are required")
 
-        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (self.gram.grams * gas_constant)
+        return (self.pressure.atmosphere * self.volume.liter * self.molar_mass.gram_per_mol) / (self.gram.grams * self.gas_constant.gas_mode)
 
 @dataclass(kw_only=True)
 class PVdRT:
@@ -254,6 +266,7 @@ class PVdRT:
     volume: Optional[Volume] = None
     density: Optional[Density] = None
     temperature: Optional[Temperature] = None
+    gas_constant: GasConstant = field(default_factory=lambda: GasConstant())
 
     @property
     def calculate_pressure(self):
@@ -262,7 +275,7 @@ class PVdRT:
         if (self.volume is None or self.density is None or self.temperature is None):
             raise ValueError("volume, density, and temperature are required")
 
-        return (self.density.gram_per_liter * gas_constant * self.temperature.kelvin) / self.volume.liter
+        return (self.density.gram_per_liter * self.gas_constant.gas_mode * self.temperature.kelvin) / self.volume.liter
 
     @property
     def calculate_volume(self):
@@ -271,7 +284,7 @@ class PVdRT:
         if (self.pressure is None or self.density is None or self.temperature is None):
             raise ValueError("pressure, density, and temperature are required")
 
-        return (self.density.gram_per_liter * gas_constant * self.temperature.kelvin) / self.pressure.atmosphere
+        return (self.density.gram_per_liter * self.gas_constant.gas_mode * self.temperature.kelvin) / self.pressure.atmosphere
 
     @property
     def calculate_density(self):
@@ -280,7 +293,7 @@ class PVdRT:
         if (self.pressure is None or self.volume is None or self.temperature is None):
             raise ValueError("pressure, volume, and temperature are required")
 
-        return (self.pressure.atmosphere * self.volume.liter) / (gas_constant * self.temperature.kelvin)
+        return (self.pressure.atmosphere * self.volume.liter) / (self.gas_constant.gas_mode * self.temperature.kelvin)
 
     @property
     def calculate_temperature(self):
@@ -289,13 +302,14 @@ class PVdRT:
         if (self.pressure is None or self.volume is None or self.density is None):
             raise ValueError("pressure, volume, and density are required")
 
-        return (self.pressure.atmosphere * self.volume.liter) / (self.density.gram_per_liter * gas_constant)
+        return (self.pressure.atmosphere * self.volume.liter) / (self.density.gram_per_liter * self.gas_constant.gas_mode)
 
 @dataclass(kw_only=True)
 class PMRT:
     pressure: Optional[Pressure] = None
     molarity: Optional[Molarity] = None
     temperature: Optional[Temperature] = None
+    gas_constant: GasConstant = field(default_factory=lambda: GasConstant())
 
     @property
     def calculate_pressure(self):
@@ -304,7 +318,7 @@ class PMRT:
         if (self.molarity is None or self.temperature is None):
             raise ValueError("molarity, and temperature are required")
 
-        return (self.molarity.mol_per_liter * gas_constant * self.temperature.kelvin)
+        return (self.molarity.mol_per_liter * self.gas_constant.gas_mode * self.temperature.kelvin)
 
     @property
     def calculate_molarity(self):
@@ -313,7 +327,7 @@ class PMRT:
         if (self.pressure is None or self.temperature is None):
             raise ValueError("pressure, and temperature are required")
 
-        return (self.pressure.atmosphere / (gas_constant * self.temperature.kelvin))
+        return (self.pressure.atmosphere / (self.gas_constant.gas_mode * self.temperature.kelvin))
 
     @property
     def calculate_temperature(self):
@@ -322,4 +336,4 @@ class PMRT:
         if (self.pressure is None or self.molarity is None):
             raise ValueError("pressure, and molarity are required")
 
-        return (self.pressure.atmosphere / (self.molarity.mol_per_liter * gas_constant))
+        return (self.pressure.atmosphere / (self.molarity.mol_per_liter * self.gas_constant.gas_mode))
