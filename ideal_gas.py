@@ -35,7 +35,7 @@ class Pressure:
             return self.pressure
         elif self.unit in ("Torr", "mmHg"):
             return self.pressure / 760
-        raise ValueError(f"Unsupported pressure unit: {self.unit}")
+        raise ValueError("Unsupported pressure unit")
 
 @dataclass(kw_only=True)
 class Volume:
@@ -52,7 +52,7 @@ class Volume:
             return self.volume
         elif self.unit in ("ml", "cm3"):
             return self.volume / 1000
-        raise ValueError(f"Unsupported volume unit: {self.unit}")
+        raise ValueError("Unsupported volume unit")
 
 @dataclass(kw_only=True)
 class Mole:
@@ -67,7 +67,7 @@ class Mole:
     def mol(self) -> float:
         if self.unit == "mol":
             return self.mole
-        raise ValueError(f"Unsupported mole unit: {self.unit}")
+        raise ValueError("Unsupported mole unit")
 
 @dataclass(kw_only=True)
 class GasConstant:
@@ -97,7 +97,7 @@ class Temperature:
             return self.temperature
         elif self.unit == "C":
             return self.temperature + self.kelvin_offset
-        raise ValueError(f"Unsupported temperature unit: {self.unit}")
+        raise ValueError("Unsupported temperature unit")
 
 @dataclass(kw_only=True)
 class Gram:
@@ -114,7 +114,7 @@ class Gram:
             return self.gram
         elif self.unit == "kg":
             return self.gram * 1000
-        raise ValueError(f"Unsupported gram unit: {self.unit}")
+        raise ValueError("Unsupported gram unit")
 
 @dataclass(kw_only=True)
 class MolarMass:
@@ -129,7 +129,7 @@ class MolarMass:
     def gram_per_mol(self) -> float:
         if self.unit == "g/mol":
             return self.molar_mass
-        raise ValueError(f"Unsupported molar mass unit: {self.unit}")
+        raise ValueError("Unsupported molar mass unit")
 
 @dataclass(kw_only=True)
 class Density:
@@ -144,7 +144,7 @@ class Density:
     def gram_per_liter(self) -> float:
         if self.unit in ("g/L", "g/dm3"):
             return self.density
-        raise ValueError(f"Unsupported density unit: {self.unit}")
+        raise ValueError("Unsupported density unit")
 
 @dataclass(kw_only=True)
 class Molarity:
@@ -159,7 +159,7 @@ class Molarity:
     def mol_per_liter(self) -> float:
         if self.unit in ("mol/L", "mol/dm3"):
             return self.molarity
-        raise ValueError(f"Unsupported molarity unit: {self.unit}")
+        raise ValueError("Unsupported molarity unit")
 
 @dataclass(kw_only=True)
 class PVnRT:
