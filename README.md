@@ -20,10 +20,10 @@ Pure Python `version >= 3.10`
 - Molarity `mol/dm3` and `mol/L`
 
 > [!IMPORTANT]
-> # Default Mode
+> ### Default Mode
 > - Gas Constant (R) `0.082057`
 > - Kelvin (K) `273.15`
-> # School Mode 
+> ### School Mode 
 > - Gas Constant (R) `0.0821`
 > - Kelvin (K) `273`
 
