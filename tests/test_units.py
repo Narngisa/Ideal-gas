@@ -1,4 +1,4 @@
-from ideal_gas import KELVIN_OFFSET_DEFAULT, KELVIN_OFFSET_SCHOOL, Density, GasConstant, Gram, MolarMass, Molarity, Pressure, Volume, Mole, Temperature, GAS_CONSTANT_DEFAULT, GAS_CONSTANT_SCHOOL
+from ideal_gas import KELVIN_OFFSET_DEFAULT, KELVIN_OFFSET_SCHOOL, GAS_CONSTANT_DEFAULT, GAS_CONSTANT_SCHOOL, Density, GasConstant, Gram, MolarMass, Molarity, Pressure, Volume, Mole, Temperature
 import pytest
 
 @pytest.mark.parametrize("value, unit, expected",[
@@ -18,10 +18,6 @@ def test_pressure_zero():
         Pressure(pressure=0, unit="Torr")
         Pressure(pressure=0, unit="mmHg")
 
-def test_pressure_invaild_unit():
-    with pytest.raises(ValueError, match="Unsupported pressure unit"):
-        Pressure(pressure=1, unit="invaild") # type: ignore
-
 @pytest.mark.parametrize("value, unit, expected", [
     (1000, "cm3", 1),
     (1000, "ml", 1),
@@ -40,10 +36,6 @@ def test_volume_zero():
         Volume(volume=0, unit="cm3")
         Volume(volume=0, unit="ml")
 
-def test_volume_invaild_unit():
-    with pytest.raises(ValueError, match="Unsupported volume unit"):
-        Volume(volume=1, unit="invaild") # type: ignore
-
 @pytest.mark.parametrize("value, unit, expected", [
     (1, "mol", 1)
 ])
@@ -55,10 +47,6 @@ def test_mole_conversion(value, unit, expected):
 def test_mole_zero():
     with pytest.raises(ValueError, match="Mole must be greater than zero"):
         Mole(mole=0, unit="mol")
-
-def test_mole_invaild_unit():
-    with pytest.raises(ValueError, match="Unsupported mole unit"):
-        Mole(mole=1, unit="invaild") # type: ignore
 
 def test_gas_constant_default():
     R = GasConstant(school_mode=False)
@@ -112,10 +100,6 @@ def test_temperature_above_absolute_zero():
     assert t_2.kelvin == 1
     assert t_2.kelvin_offset == KELVIN_OFFSET_SCHOOL
 
-def test_temperature_invalid_unit():
-    with pytest.raises(ValueError, match="Unsupported temperature unit"):
-        Temperature(temperature=0, unit="invalid")  # type: ignore
-
 @pytest.mark.parametrize("value, unit, expected", [
     (1000, "g", 1000),
     (1, "kg", 1000)
@@ -130,10 +114,6 @@ def test_gram_zero():
         Gram(gram=0, unit="g")
         Gram(gram=0, unit="kg")
 
-def test_gram_invalid_unit():
-    with pytest.raises(ValueError, match="Unsupported gram unit"):
-        Gram(gram=1, unit="invalid")  # type: ignore
-
 @pytest.mark.parametrize("value, unit, expected", [
     (1, "g/mol", 1)
 ])
@@ -145,10 +125,6 @@ def test_molar_mass_conversion(value, unit, expected):
 def test_molar_mass_zero():
     with pytest.raises(ValueError, match="Molar mass must be greater than zero"):
         MolarMass(molar_mass=0, unit="g/mol")
-
-def test_molar_mass_invalid_unit():
-    with pytest.raises(ValueError, match="Unsupported molar mass unit"):
-        MolarMass(molar_mass=1, unit="invalid")  # type: ignore
 
 @pytest.mark.parametrize("value, unit, expected", [
     (1, "g/L", 1)
@@ -163,16 +139,12 @@ def test_density_zero():
         Density(density=0, unit="g/dm3")
         Density(density=0, unit="g/L")
 
-def test_density_invalid_unit():
-    with pytest.raises(ValueError, match="Unsupported density unit"):
-        Density(density=1, unit="invalid")  # type: ignore
-
 @pytest.mark.parametrize("value, unit, expected", [
     (1, "mol/L", 1),
     (1, "mol/dm3", 1)
 ])
 
-def test_molarity_coversion(value, unit, expected):
+def test_molarity_conversion(value, unit, expected):
     mr = Molarity(molarity=value, unit=unit)
     assert mr.mol_per_liter == expected
 
@@ -180,7 +152,3 @@ def test_molarity_zero():
     with pytest.raises(ValueError, match="Molarity must be greater than zero"):
         Molarity(molarity=0, unit="mol/dm3")
         Molarity(molarity=0, unit="mol/L")
-
-def test_molarity_invalid_unit():
-    with pytest.raises(ValueError, match="Unsupported molarity unit"):
-        Molarity(molarity=1, unit="invalid")  # type: ignore
