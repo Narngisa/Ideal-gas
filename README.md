@@ -2,7 +2,7 @@
 Calculating The Ideal Gas Law in python, focusing make it easy and high school-friendly
 
 > [!NOTE]
-> This project under active development 🔥
+> This project under active development ☕
 
 ## 🐍Language
 Pure Python `version >= 3.10`
