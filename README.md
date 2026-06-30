@@ -20,6 +20,10 @@ Pure Python `version >= 3.10`
 - Molarity `mol/dm3` and `mol/L`
 
 > [!IMPORTANT]
+> # Default Mode
+> - Gas Constant (R) `0.082057`
+> - Kelvin (K) `273.15`
+> # School Mode 
 > - Gas Constant (R) `0.0821`
 > - Kelvin (K) `273`
 
@@ -42,7 +46,7 @@ from ideal_gas import PVnRT, Volume, Mole, Temperature
 gas = PVnRT(
     volume=Volume(volume=7600, unit="ml"),
     mole=Mole(mole=8, unit="mol"),
-    temperature=Temperature(temperature=27, unit="C"),
+    temperature=Temperature(temperature=27, unit="C", school_mode=False),
 )
 
 # Pressure ~ 25.92631
@@ -58,7 +62,7 @@ gas = PVgMRT(
     volume=Volume(volume=400, unit="ml"),
     gram=Gram(gram=5, unit="kg"),
     molar_mass=MolarMass(molar_mass=4, unit="g/mol"),
-    temperature=Temperature(temperature=298, unit="K"),
+    temperature=Temperature(temperature=298, unit="K", school_mode=False),
 )
 
 # Pressure ~ 76,455.625
@@ -73,7 +77,7 @@ from ideal_gas import PVdRT, Volume, Density, Temperature
 gas = PVdRT(
     volume=Volume(volume=800, unit="ml"),
     density=Density(density=2, unit="g/L"),
-    temperature=Temperature(temperature=300, unit="K"),
+    temperature=Temperature(temperature=300, unit="K", school_mode=False),
 )
 
 # Pressure ~ 61.575
@@ -87,10 +91,30 @@ from ideal_gas import PMRT, Molarity, Temperature
 
 gas = PMRT(
     molarity=molarity(volume=7, unit="mol/L"),
-    temperature=Temperature(temperature=300, unit="K"),
+    temperature=Temperature(temperature=300, unit="K", school_mode=False),
 )
 
 # Pressure ~ 172.41
+print(gas.calculate_pressure)
+```
+
+# Mode Gas Constant
+```py
+from ideal_gas import PVnRT, Volume, Mole, Temperature, GasConstant
+# Pressure, Volume, Mole, Temperature
+
+gas = PVnRT(
+    volume=Volume(volume=7600, unit="ml"),
+    mole=Mole(mole=8, unit="mol"),
+    temperature=Temperature(temperature=27, unit="C", school_mode=False),
+    gas_constant=GasConstant(school_mode=False)
+    """
+    gas_constant=GasConstant() [ Default Mode ]
+    gas_constant=GasConstant(school_mode=True) [School Mode]
+    """
+)
+
+# Pressure ~ 25.92631
 print(gas.calculate_pressure)
 ```
 
